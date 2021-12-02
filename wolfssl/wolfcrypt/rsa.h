@@ -128,7 +128,15 @@ WOLFSSL_API int wc_RsaSetRNG(RsaKey* key, WC_RNG* rng);
 /* Padding types */
 #define WC_RSA_PKCSV15_PAD 0
 #define WC_RSA_OAEP_PAD    1
+#define WC_RSA_NO_PAD      2
 
+WOLFSSL_API int wc_RsaPad_ex(const byte* input, word32 inputLen, byte* pkcsBlock,
+                        word32 pkcsBlockLen, byte padValue, WC_RNG* rng,
+                        int padType, enum wc_HashType hType, int mgf,
+                        byte* optLabel, word32 labelLen, void* heap);
+WOLFSSL_API int wc_RsaUnPad_ex(byte* pkcsBlock, word32 pkcsBlockLen, byte** out,
+                          byte padValue, int padType, enum wc_HashType hType,
+                          int mgf, byte* optLabel, word32 labelLen, void* heap);
 WOLFSSL_API int  wc_RsaPublicEncrypt_ex(const byte* in, word32 inLen, byte* out,
                    word32 outLen, RsaKey* key, WC_RNG* rng, int type,
                    enum wc_HashType hash, int mgf, byte* label, word32 lableSz);

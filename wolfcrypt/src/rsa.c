@@ -584,7 +584,7 @@ static int wc_RsaPad(const byte* input, word32 inputLen, byte* pkcsBlock,
 
 #ifndef WC_NO_RSA_OAEP
 /* helper function to direct which padding is used */
-static int wc_RsaPad_ex(const byte* input, word32 inputLen, byte* pkcsBlock,
+int wc_RsaPad_ex(const byte* input, word32 inputLen, byte* pkcsBlock,
                         word32 pkcsBlockLen, byte padValue, WC_RNG* rng,
                         int padType, enum wc_HashType hType, int mgf,
                         byte* optLabel, word32 labelLen, void* heap)
@@ -752,7 +752,7 @@ static int RsaUnPad(const byte *pkcsBlock, unsigned int pkcsBlockLen,
 
 #ifndef WC_NO_RSA_OAEP
 /* helper function to direct unpadding */
-static int wc_RsaUnPad_ex(byte* pkcsBlock, word32 pkcsBlockLen, byte** out,
+int wc_RsaUnPad_ex(byte* pkcsBlock, word32 pkcsBlockLen, byte** out,
                           byte padValue, int padType, enum wc_HashType hType,
                           int mgf, byte* optLabel, word32 labelLen, void* heap)
 {
@@ -769,6 +769,14 @@ static int wc_RsaUnPad_ex(byte* pkcsBlock, word32 pkcsBlockLen, byte** out,
             WOLFSSL_MSG("wolfSSL Using RSA OAEP padding");
             ret = wc_RsaUnPad_OAEP((byte*)pkcsBlock, pkcsBlockLen, out,
                                           hType, mgf, optLabel, labelLen, heap);
+            break;
+
+        case WC_RSA_NO_PAD:
+            WOLFSSL_MSG("wolfSSL Using NO padding");
+            if (out != NULL) {
+                *out = pkcsBlock;
+            }
+            ret = pkcsBlockLen;
             break;
 
         default:
